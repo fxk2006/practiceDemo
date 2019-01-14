@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//
+// 计算两个时间的天数
 func TimeSubDates(t1, t2 time.Time) int {
 
 	if t1.Location().String() != t2.Location().String() {
@@ -39,6 +39,8 @@ func TimeSubDates(t1, t2 time.Time) int {
 		}
 	}
 }
+
+// 计算两个时间的天数
 func timeSub(t1, t2 time.Time) int {
 	t1 = t1.UTC().Truncate(24 * time.Hour)
 	t2 = t2.UTC().Truncate(24 * time.Hour)
