@@ -1,10 +1,6 @@
-var VIL = (function (_super) {
+let VIL = (function () {
     let VIL = {
     };
-
-
-
-
 
 
 
@@ -102,10 +98,10 @@ var VIL = (function (_super) {
     }
 
     try{
-        _super.EngineSocket = DefaultWebSocket ;
+        VIL.EngineSocket = DefaultWebSocket ;
     }catch (e) {
         console.error("VILEngine error ", e);
     }
 
-    return _super;
-})(VIL || {});
+    return VIL;
+})();
