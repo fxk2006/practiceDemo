@@ -10,7 +10,11 @@ message Package{
     message Request{
         uint32 cmd=1;
         uint32 reserved = 2;
-        bytes body=3;
+        uint64 timeStamp = 3;
+        string token = 4; 
+        uint32 msgType = 5;
+        string message = 6;
+        bytes  body=7;
     }
 
     message Response{

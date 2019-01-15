@@ -10,6 +10,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+// logicAddr grpc 服务地址
+// httpAddr http 服务地址
 func run(logicAddr, httpAddr string) error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
@@ -24,6 +26,7 @@ func run(logicAddr, httpAddr string) error {
 		fmt.Println("RegisterSimpleServerHandlerFromEndpoint error:", err)
 		return err
 	}
+	fmt.Println("http 服务启动：", httpAddr)
 	err = http.ListenAndServe(httpAddr, mux)
 	if err != nil {
 		fmt.Println("ListenAndServe failed ", err)
@@ -34,7 +37,7 @@ func run(logicAddr, httpAddr string) error {
 
 func main() {
 
-	if err := run("127.0.0.1:32111", "0.0.0.0:32112"); err != nil {
+	if err := run("0.0.0.0:32111", "0.0.0.0:32112"); err != nil {
 		fmt.Println("run error", err)
 		return
 	}
