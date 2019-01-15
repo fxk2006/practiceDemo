@@ -8,15 +8,15 @@ import "google/api/annotations.proto";
 message Package{
 
     message Request{
-        uint32 Cmd=1;
+        uint32 cmd=1;
         uint32 reserved = 2;
-        bytes Body=3;
+        bytes body=3;
     }
 
     message Response{
-        uint32 Code = 1;
+        uint32 code = 1;
         string message = 2;
-        bytes Data = 3;
+        bytes data = 3;
     }
 }
 

@@ -1,13 +1,41 @@
-package proxy
+package main
 
-func run(addr string) {
-	// ctx := context.Background()
-	// ctx, cancel := context.WithCancel(ctx)
-	// defer cancel()
+import (
+	"context"
+	"fmt"
+	"net/http"
+	gw "practiceDemo/grcp_gateway_work/simple"
 
-	// mux := runtime.NewServeMux()
-	// opts := []grpc.DialOption{grpc.WithInsecure}
-	// endpoint = addr
-	// err := pb.
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"google.golang.org/grpc"
+)
 
+func run(logicAddr, httpAddr string) error {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	mux := runtime.NewServeMux()
+	opts := []grpc.DialOption{grpc.WithInsecure()}
+	endpoint := logicAddr
+
+	err := gw.RegisterSimpleServerHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	if err != nil {
+		fmt.Println("RegisterSimpleServerHandlerFromEndpoint error:", err)
+		return err
+	}
+	err = http.ListenAndServe(httpAddr, mux)
+	if err != nil {
+		fmt.Println("ListenAndServe failed ", err)
+		return err
+	}
+	return nil
+}
+
+func main() {
+
+	if err := run("127.0.0.1:32111", "0.0.0.0:32112"); err != nil {
+		fmt.Println("run error", err)
+		return
+	}
 }
