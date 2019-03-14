@@ -82,4 +82,16 @@ func main() {
 	fmt.Println(pool.Get())
 	fmt.Println(pool.Get())
 
+	type testA = struct {
+		AA int
+	}
+	type testS = struct {
+		ab int
+		aa *testA
+	}
+
+	var ab testS
+	ab.ab = 0
+
+	fmt.Printf("struct :%v", ab.aa)
 }
