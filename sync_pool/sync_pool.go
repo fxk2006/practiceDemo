@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"practiceDemo/sync_pool/sample"
 	"sync"
 )
 
@@ -71,27 +71,31 @@ func main() {
 	// v4 := pool.Get()
 	// fmt.Printf("v4: %v\n", v4)
 
-	pool := sync.Pool{New: func() interface{} {
-		return "empty string"
-	}}
-	s := "Hello World"
-	pool.Put(s)
-	fmt.Println(pool.Get())
-	fmt.Println(pool.Get())
-	fmt.Println(pool.Get())
-	fmt.Println(pool.Get())
-	fmt.Println(pool.Get())
+	////////////////----------------------
+	//pool := sync.Pool{New: func() interface{} {
+	//	return "empty string"
+	//}}
+	//s := "Hello World"
+	//pool.Put(s)
+	//pool.Put("bbbb")
+	//fmt.Println(pool.Get())
+	//fmt.Println(pool.Get())
+	//fmt.Println(pool.Get())
+	//fmt.Println(pool.Get())
+	//fmt.Println(pool.Get())
+	//
+	//type testA = struct {
+	//	AA int
+	//}
+	//type testS = struct {
+	//	ab int
+	//	aa *testA
+	//}
+	//
+	//var ab testS
+	//ab.ab = 0
+	//
+	//fmt.Printf("struct :%v", ab.aa)
 
-	type testA = struct {
-		AA int
-	}
-	type testS = struct {
-		ab int
-		aa *testA
-	}
-
-	var ab testS
-	ab.ab = 0
-
-	fmt.Printf("struct :%v", ab.aa)
+	sample.SampleForSyncPool()
 }
