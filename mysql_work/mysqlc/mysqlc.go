@@ -19,6 +19,10 @@ func NewMysqlClient(user string, password string, server_addr string, dbname str
 	if err != nil {
 		panic(err.Error())
 	}
+	// 开启链接池，SetMaxOpenConns 设置最大链接数， SetMaxIdleConns 用于设置闲置的连接数。
+	mc.db.SetMaxOpenConns(1000)
+	mc.db.SetMaxIdleConns(100)
+
 	err = mc.db.Ping()
 	if err != nil {
 		panic(err.Error())
@@ -26,11 +30,20 @@ func NewMysqlClient(user string, password string, server_addr string, dbname str
 	return mc, nil
 }
 
+func(m *MysqlClient)Create(name string) (err error){
+	res, err := m.db.Exec(fmt.Sprintf("create database %s", name))
+	fmt.Println(res.RowsAffected())
+	return
+}
+func(m *MysqlClient)Drop(name string)(err error){
+	res, err := m.db.Exec(fmt.Sprintf("drop database %s", name))
+	fmt.Println(res.RowsAffected())
+	return
+}
 // 关闭 mysql 连接
 func (m *MysqlClient) Close() {
 	m.db.Close()
 }
-
 func (m *MysqlClient) SelectExample(userid uint32) (nickname string, avatar string, err error) {
 	var sqlstr string
 	sqlstr = fmt.Sprintf("SELECT nickname,avatar FROM user.user WHERE userID = %d", userid)
@@ -55,7 +68,6 @@ func (m *MysqlClient) InsertExample(id int, name, remark string) (err error) {
 	}
 	return
 }
-
 func (m *MysqlClient) UpdateExample(id int, name string) (err error) {
 	sql := fmt.Sprintf("UPDATE user.user SET name='%s' WHERE id=%d  ;", name, id)
 	_, err = m.db.Exec(sql)
@@ -64,7 +76,6 @@ func (m *MysqlClient) UpdateExample(id int, name string) (err error) {
 	}
 	return
 }
-
 func (m *MysqlClient) DeleteExample(id int) (err error) {
 	sql := fmt.Sprintf("DELETE FROM user.user  WHERE id=%d  ;", id)
 	_, err = m.db.Exec(sql)
