@@ -1,15 +1,27 @@
 
 package main
+
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
-"net/http"
+	"net/http"
 )
 
 type httpsHandler struct {
+}
+
+func addTrust(pool*x509.CertPool, path string) {
+	aCrt, err := ioutil.ReadFile(path)
+	if err!= nil {
+		fmt.Println("ReadFile err:",err)
+		return
+	}
+	pool.AppendCertsFromPEM(aCrt)
+
 }
 
 func (*httpsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -18,14 +30,11 @@ func (*httpsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	pool := x509.NewCertPool()
-	caCertPath := "../sslfile/root.crt"
+	// 这里是加载客户端提供的证书，最好是加载客户端提供的根证书
+	addTrust(pool,"../sslfile/ca.crt")
+	addTrust(pool,"../sslfile/selfsigned.crt")
+	addTrust(pool,"../sslfile/ville_pem.crt")
 
-	caCrt, err := ioutil.ReadFile(caCertPath)
-	if err != nil {
-		log.Fatal("ReadFile err:", err)
-		return
-	}
-	pool.AppendCertsFromPEM(caCrt)
 
 	s := &http.Server{
 		Addr:    ":8080",
@@ -36,7 +45,7 @@ func main() {
 		},
 	}
 
-	if err = s.ListenAndServeTLS("../sslfile/server.crt", "../sslfile/server.key"); err != nil {
+	if err := s.ListenAndServeTLS("../sslfile/server.crt", "../sslfile/server.key"); err != nil {
 		log.Fatal("ListenAndServeTLS err:", err)
 	}
 }
